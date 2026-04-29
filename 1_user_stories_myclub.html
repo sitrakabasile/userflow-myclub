@@ -1,0 +1,176 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+.header{padding:1.5rem 0 1.1rem;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:1.25rem}
+.header h1{font-size:22px;font-weight:650;letter-spacing:-0.02em;color:#2E2A64}
+.header p{font-size:13px;line-height:1.5;color:var(--color-text-secondary);margin-top:6px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
+.filter-btn{padding:7px 12px;border-radius:999px;font-size:12px;line-height:1;border:0.5px solid var(--color-border-secondary);cursor:pointer;background:var(--color-background-primary);color:var(--color-text-secondary);transition:background 160ms ease,border-color 160ms ease,color 160ms ease,transform 120ms ease}
+.filter-btn:hover{transform:translateY(-1px)}
+.filter-btn:focus-visible{outline:2px solid rgba(83,74,183,0.35);outline-offset:2px}
+.filter-btn.active{font-weight:600}
+.f-all.active{background:#EEEDFE;color:#3C3489;border-color:#534AB7}
+.f-admin.active{background:#EEEDFE;color:#3C3489;border-color:#534AB7}
+.f-coach.active{background:#E1F5EE;color:#085041;border-color:#0F6E56}
+.f-medical.active{background:#E6F1FB;color:#0C447C;border-color:#185FA5}
+.f-fan.active{background:#EAF3DE;color:#27500A;border-color:#3B6D11}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;padding:14px 14px 12px;border-top:3px solid;box-shadow:0 1px 0 rgba(16,24,40,0.04);transition:transform 160ms ease,box-shadow 160ms ease,border-color 160ms ease}
+.card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,0.08)}
+.card.admin{border-top-color:#534AB7}
+.card.coach{border-top-color:#0F6E56}
+.card.medical{border-top-color:#185FA5}
+.card.fan{border-top-color:#3B6D11}
+.card-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.role-badge{font-size:11px;font-weight:650;padding:4px 10px;border-radius:999px}
+.badge-admin{background:#EEEDFE;color:#3C3489}
+.badge-coach{background:#E1F5EE;color:#085041}
+.badge-medical{background:#E6F1FB;color:#0C447C}
+.badge-fan{background:#EAF3DE;color:#27500A}
+.id-tag{font-size:11px;color:var(--color-text-secondary);margin-left:auto}
+.prio{font-size:10px;font-weight:650;padding:3px 8px;border-radius:999px;border:0.5px solid transparent}
+.p-haute{background:#FCEBEB;color:#791F1F;border-color:rgba(121,31,31,0.18)}
+.p-moy{background:#FAEEDA;color:#633806;border-color:rgba(99,56,6,0.18)}
+.p-faible{background:#EAF3DE;color:#27500A;border-color:rgba(39,80,10,0.18)}
+.story-text{font-size:13px;color:var(--color-text-primary);line-height:1.65;margin-bottom:10px}
+.story-text strong{font-weight:650}
+.criteria-label{font-size:11px;font-weight:650;color:var(--color-text-secondary);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em}
+.criteria{list-style:none;padding:0;display:flex;flex-direction:column;gap:6px}
+.criteria li{font-size:12px;color:var(--color-text-secondary);padding:0 0 0 14px;position:relative;line-height:1.55}
+.criteria li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--color-border-secondary)}
+.gwt strong{font-weight:700;color:var(--color-text-primary)}
+.module-tag{font-size:11px;color:var(--color-text-secondary);margin-top:12px;padding-top:10px;border-top:0.5px solid var(--color-border-tertiary)}
+.module-tag span{background:var(--color-background-secondary);padding:3px 8px;border-radius:8px}
+.count{font-size:13px;color:var(--color-text-secondary);margin-bottom:1rem}
+</style>
+<div class="header">
+  <h1>User stories — MyClub App</h1>
+  <p>Spécifications fonctionnelles par rôle utilisateur · v1.0 · Avril 2026</p>
+</div>
+<div class="filters">
+  <button class="filter-btn f-all active" onclick="filter('all',this)">Tous (10)</button>
+  <button class="filter-btn f-admin" onclick="filter('admin',this)">Administrateur (4)</button>
+  <button class="filter-btn f-coach" onclick="filter('coach',this)">Entraîneur (2)</button>
+  <button class="filter-btn f-medical" onclick="filter('medical',this)">Staff médical (2)</button>
+  <button class="filter-btn f-fan" onclick="filter('fan',this)">Supporter (2)</button>
+</div>
+<p class="count" id="count">10 stories affichées</p>
+<div class="grid" id="grid"></div>
+<script>
+const stories=[
+  {id:"US-01",role:"admin",roleLabel:"Administrateur",prio:"haute",module:"Effectif",
+   text:"En tant qu'<strong>administrateur</strong>, je veux gérer l'effectif (ajouter, modifier, supprimer des joueurs) afin de maintenir la liste toujours à jour.",
+   criteria:[
+     {given:"Je suis connecté en tant qu'administrateur",when:"J'ajoute un joueur",then:"Je peux renseigner nom, prénom, poste, numéro et photo"},
+     {given:"Un joueur existe",when:"Je modifie sa fiche",then:"Tous les champs sont éditables et la modification est sauvegardée"},
+     {given:"Je veux retirer un joueur",when:"Je clique sur archiver/supprimer",then:"Une confirmation est demandée avant l'action"},
+     {given:"La liste des joueurs est affichée",when:"J'applique un filtre",then:"Je peux filtrer par poste et statut"}
+   ]},
+  {id:"US-02",role:"admin",roleLabel:"Administrateur",prio:"haute",module:"Contrats",
+   text:"En tant qu'<strong>administrateur</strong>, je veux gérer les contrats des joueurs et recevoir des alertes d'expiration afin d'anticiper les renouvellements.",
+   criteria:[
+     {given:"Je suis connecté en tant qu'administrateur",when:"Je crée un contrat",then:"Je saisis date début, date fin, salaire et clause"},
+     {given:"Un contrat a une date de fin",when:"On arrive à J-90, J-30 ou J-7",then:"Une alerte est générée automatiquement"},
+     {given:"Un joueur possède des contrats",when:"Je consulte sa fiche",then:"Je vois l'historique des contrats"},
+     {given:"Un contrat existe",when:"Je mets à jour son statut",then:"Je peux le passer en actif, expiré ou résilié"}
+   ]},
+  {id:"US-03",role:"admin",roleLabel:"Administrateur",prio:"haute",module:"Matchs",
+   text:"En tant qu'<strong>administrateur</strong>, je veux planifier le calendrier des matchs afin d'organiser la saison sportive.",
+   criteria:[
+     {given:"Je suis connecté en tant qu'administrateur",when:"Je crée un match",then:"Je renseigne adversaire, date, lieu et compétition"},
+     {given:"Des matchs existent",when:"J'ouvre le calendrier",then:"Je dispose d'une vue mensuelle"},
+     {given:"Un match est publié",when:"La planification est validée",then:"Les équipes reçoivent une notification"},
+     {given:"Le calendrier est planifié",when:"Je demande un export",then:"Un PDF du calendrier est généré"}
+   ]},
+  {id:"US-04",role:"admin",roleLabel:"Administrateur",prio:"moyenne",module:"Analytics",
+   text:"En tant qu'<strong>administrateur</strong>, je veux consulter les analytics du club afin de prendre des décisions éclairées.",
+   criteria:[
+     {given:"Je suis connecté en tant qu'administrateur",when:"J'ouvre le dashboard analytics",then:"Je vois les KPIs revenus, billetterie et boutique"},
+     {given:"Des saisons sont disponibles",when:"Je sélectionne une saison",then:"Les statistiques collectives se mettent à jour"},
+     {given:"Des graphiques sont affichés",when:"J'applique des filtres",then:"Les graphiques se mettent à jour et restent interactifs"},
+     {given:"Un rapport est disponible",when:"Je lance un export",then:"Je peux exporter en PDF et/ou Excel"}
+   ]},
+  {id:"US-05",role:"coach",roleLabel:"Entraîneur",prio:"haute",module:"Effectif / Matchs",
+   text:"En tant qu'<strong>entraîneur</strong>, je veux créer et gérer les compositions d'équipe avant chaque match afin d'optimiser les performances.",
+   criteria:[
+     {given:"Un match à venir est sélectionné",when:"Je crée une composition",then:"Je peux sélectionner 11 titulaires et des remplaçants"},
+     {given:"Une composition est en édition",when:"Je place les joueurs",then:"Je peux utiliser le drag & drop sur le plan de jeu"},
+     {given:"La composition est prête",when:"Je sauvegarde ou publie",then:"La compo est enregistrée et publiée"},
+     {given:"La composition est publiée",when:"Des joueurs sont sélectionnés",then:"Les joueurs sélectionnés reçoivent une notification"}
+   ]},
+  {id:"US-06",role:"coach",roleLabel:"Entraîneur",prio:"moyenne",module:"Analytics",
+   text:"En tant qu'<strong>entraîneur</strong>, je veux consulter les statistiques individuelles de chaque joueur afin d'analyser les performances.",
+   criteria:[
+     {given:"Je consulte la fiche d'un joueur",when:"J'ouvre l'onglet statistiques",then:"Je vois buts, passes, tirs et km parcourus"},
+     {given:"Des matchs ont été joués",when:"Je consulte l'historique",then:"Je vois les notes par match"},
+     {given:"Deux joueurs sont sélectionnables",when:"Je lance une comparaison",then:"Je peux comparer leurs statistiques"},
+     {given:"Une saison est sélectionnée",when:"J'affiche l'évolution",then:"Un graphique montre la progression sur la saison"}
+   ]},
+  {id:"US-07",role:"medical",roleLabel:"Staff médical",prio:"haute",module:"Médical",
+   text:"En tant que <strong>médecin</strong>, je veux accéder aux dossiers médicaux et enregistrer les blessures des joueurs afin d'assurer leur suivi.",
+   criteria:[
+     {given:"Je suis connecté en tant que staff médical",when:"J'enregistre une blessure",then:"Je saisis type, gravité, date et durée estimée"},
+     {given:"Une blessure existe",when:"Je mets à jour le dossier",then:"Je peux définir apte, indisponible ou rééducation"},
+     {given:"Une date de retour estimée est renseignée",when:"La date approche ou change",then:"Le suivi affiche l'échéance et l'alerte de retour"},
+     {given:"Je consulte un dossier médical",when:"Je demande un export",then:"Un rapport médical PDF est généré"}
+   ]},
+  {id:"US-08",role:"medical",roleLabel:"Staff médical",prio:"moyenne",module:"Médical",
+   text:"En tant que <strong>médecin</strong>, je veux recevoir des alertes lorsqu'un joueur est proche du retour afin de planifier sa reprise d'entraînement.",
+   criteria:[
+     {given:"Un joueur a une date de retour estimée",when:"On est à J-3",then:"Je reçois une notification"},
+     {given:"Le retour estimé approche",when:"L'alerte est déclenchée",then:"Le statut joueur peut être mis à jour selon les règles"},
+     {given:"Des blessures existent",when:"Je consulte l'historique",then:"Je vois la liste complète et consultable"},
+     {given:"Je suis sur le dashboard",when:"Je clique sur une alerte",then:"J'accède rapidement à la fiche joueur"}
+   ]},
+  {id:"US-09",role:"fan",roleLabel:"Supporter",prio:"haute",module:"Billetterie",
+   text:"En tant que <strong>supporter</strong>, je veux acheter des billets en ligne avec choix de place afin d'assister aux matchs facilement.",
+   criteria:[
+     {given:"Un match est ouvert à la vente",when:"Je choisis une place",then:"Je vois un plan de stade interactif"},
+     {given:"Une place est disponible",when:"Je la sélectionne et confirme",then:"La place est réservée dans ma commande"},
+     {given:"Je passe au paiement",when:"Je paie",then:"Le paiement est traité de façon sécurisée via Stripe"},
+     {given:"La commande est validée",when:"Le paiement réussit",then:"Je reçois une confirmation email et un QR code unique"}
+   ]},
+  {id:"US-10",role:"fan",roleLabel:"Supporter",prio:"moyenne",module:"Boutique",
+   text:"En tant que <strong>supporter</strong>, je veux commander des produits officiels en ligne afin de soutenir le club.",
+   criteria:[
+     {given:"Je consulte le catalogue",when:"J'applique un filtre",then:"Je peux filtrer par catégorie"},
+     {given:"Un produit a des variantes",when:"Je l'ajoute au panier",then:"Je sélectionne la variante et le panier accepte plusieurs articles"},
+     {given:"Je passe commande",when:"Je paie",then:"Le paiement est sécurisé et je peux suivre la commande"},
+     {given:"Je suis identifié",when:"Je finalise une commande",then:"Mes points de fidélité sont calculés"}
+   ]},
+];
+const badgeClass={admin:'badge-admin',coach:'badge-coach',medical:'badge-medical',fan:'badge-fan'};
+const prioClass={haute:'p-haute',moyenne:'p-moy',faible:'p-faible'};
+function formatCriteriaItem(c){
+  if(!c) return '';
+  if(typeof c==='string') return `<li>${c}</li>`;
+  const given=c.given?`<strong>Given</strong> ${c.given}`:'';
+  const when=c.when?`<strong>When</strong> ${c.when}`:'';
+  const then=c.then?`<strong>Then</strong> ${c.then}`:'';
+  const parts=[given,when,then].filter(Boolean).join(' · ');
+  return `<li class="gwt">${parts}</li>`;
+}
+function render(list){
+  const g=document.getElementById('grid');
+  g.innerHTML=list.map(s=>`
+    <div class="card ${s.role}" data-role="${s.role}">
+      <div class="card-head">
+        <span class="role-badge ${badgeClass[s.role]}">${s.roleLabel}</span>
+        <span class="prio ${prioClass[s.prio]}">${s.prio}</span>
+        <span class="id-tag">${s.id}</span>
+      </div>
+      <p class="story-text">${s.text}</p>
+      <p class="criteria-label">Critères d'acceptation</p>
+      <ul class="criteria">${(s.criteria||[]).map(formatCriteriaItem).join('')}</ul>
+      <p class="module-tag">Module : <span>${s.module}</span></p>
+    </div>`).join('');
+  document.getElementById('count').textContent=list.length+' stor'+(list.length>1?'ies':'y')+' affichée'+(list.length>1?'s':'');
+}
+function filter(role,btn){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  render(role==='all'?stories:stories.filter(s=>s.role===role));
+}
+render(stories);
+</script>
